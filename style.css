@@ -1,0 +1,22 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: #0e0e12;
+  height: 100%;
+}
+
+canvas {
+  display: block;
+  cursor: pointer;
+}
+
+#hint {
+  position: fixed;
+  top: 12px;
+  left: 16px;
+  color: rgba(255, 255, 255, 0.55);
+  font: 13px system-ui, sans-serif;
+  pointer-events: none;
+  letter-spacing: 0.02em;
+}
