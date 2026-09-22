@@ -33,7 +33,7 @@ const bwPalette = [
   ['#d0d3d6', '#212529'],
 ];
 
-const W = 120, H = 84; // thumbnail size
+const W = 80, H = 84; // thumbnail size
 
 function roundRect(c, x, y, w, h, r) {
   c.beginPath();
