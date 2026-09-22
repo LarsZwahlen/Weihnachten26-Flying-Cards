@@ -17,20 +17,20 @@ window.addEventListener('resize', resize);
 
 // ---------- thumbnail definitions ----------
 const colorPalette = [
-  ['#ff6b6b', '#c92a2a'],
-  ['#4dabf7', '#1864ab'],
-  ['#69db7c', '#2b8a3e'],
-  ['#ffd43b', '#e67700'],
-  ['#da77f2', '#862e9c'],
-  ['#66d9e8', '#0b7285'],
+  { colors: ['#ff6b6b', '#c92a2a'], title: 'Jingle Bells', image: 'https://images.unsplash.com/photo-1512389142860-9c449e58a543?auto=format&fit=crop&w=400&q=80' },
+  { colors: ['#4dabf7', '#1864ab'], title: 'Silent Night', image: 'https://images.unsplash.com/photo-1482517967863-00e15c9b44be?auto=format&fit=crop&w=400&q=80' },
+  { colors: ['#69db7c', '#2b8a3e'], title: 'Last Christmas', image: 'https://images.unsplash.com/photo-1543589077-47d81606c1bf?auto=format&fit=crop&w=400&q=80' },
+  { colors: ['#ffd43b', '#e67700'], title: 'Feliz Navidad', image: 'https://images.unsplash.com/photo-1545608444-f045a9db7643?auto=format&fit=crop&w=400&q=80' },
+  { colors: ['#da77f2', '#862e9c'], title: 'O Holy Night', image: 'https://images.unsplash.com/photo-1482636718152-6d7b5e4f5e4d?auto=format&fit=crop&w=400&q=80' },
+  { colors: ['#66d9e8', '#0b7285'], title: 'Winter Wonderland', image: 'https://images.unsplash.com/photo-1484821582734-6c6c9f99a672?auto=format&fit=crop&w=400&q=80' },
 ];
 const bwPalette = [
-  ['#f1f3f5', '#adb5bd'],
-  ['#dee2e6', '#868e96'],
-  ['#e9ecef', '#495057'],
-  ['#ced4da', '#343a40'],
-  ['#f8f9fa', '#6c757d'],
-  ['#d0d3d6', '#212529'],
+  { colors: ['#f1f3f5', '#adb5bd'], title: 'Santa Claus Is Coming to Town' },
+  { colors: ['#dee2e6', '#868e96'], title: 'Have Yourself a Merry Little Christmas' },
+  { colors: ['#e9ecef', '#495057'], title: 'White Christmas' },
+  { colors: ['#ced4da', '#343a40'], title: 'Rockin’ Around the Christmas Tree' },
+  { colors: ['#f8f9fa', '#6c757d'], title: 'The Christmas Song' },
+  { colors: ['#d0d3d6', '#212529'], title: 'Underneath the Christmas Tree' },
 ];
 
 const W = 80, H = 84; // thumbnail size
@@ -45,12 +45,7 @@ function roundRect(c, x, y, w, h, r) {
   c.closePath();
 }
 
-function offscreenThumb(colors, label) {
-  // Pre-render each thumbnail once onto an offscreen canvas so the main
-  // loop only ever does a cheap drawImage() per frame (see MDN tip:
-  // "pre-render repeating objects on an offscreen canvas")
-  const oc = document.createElement('canvas');
-  oc.width = W; oc.height = H;
+function paintThumb(oc, colors, label, image) {
   const octx = oc.getContext('2d');
   const grad = octx.createLinearGradient(0, 0, W, H);
   grad.addColorStop(0, colors[0]);
@@ -58,15 +53,48 @@ function offscreenThumb(colors, label) {
   octx.fillStyle = grad;
   roundRect(octx, 0, 0, W, H, 10);
   octx.fill();
+
+  if (image) {
+    octx.save();
+    roundRect(octx, 0, 0, W, H, 10);
+    octx.clip();
+    const scale = Math.max(W / image.width, H / image.height);
+    const width = image.width * scale;
+    const height = image.height * scale;
+    octx.globalAlpha = 0.8;
+    octx.drawImage(image, (W - width) / 2, (H - height) / 2, width, height);
+    octx.restore();
+    octx.fillStyle = 'rgba(0, 0, 0, 0.28)';
+    roundRect(octx, 0, 0, W, H, 10);
+    octx.fill();
+  }
+
   octx.strokeStyle = 'rgba(255,255,255,0.35)';
   octx.lineWidth = 2;
   roundRect(octx, 1, 1, W - 2, H - 2, 9);
   octx.stroke();
-  octx.fillStyle = 'rgba(255,255,255,0.9)';
-  octx.font = '600 13px system-ui, sans-serif';
+  octx.fillStyle = 'rgba(255,255,255,0.95)';
+  octx.font = '600 10px system-ui, sans-serif';
   octx.textAlign = 'center';
   octx.textBaseline = 'middle';
-  octx.fillText(label, W / 2, H / 2);
+  octx.fillText(label, W / 2, H / 2, W - 12);
+}
+
+function offscreenThumb(colors, label, imageUrl) {
+  // Pre-render each thumbnail once onto an offscreen canvas so the main
+  // loop only ever does a cheap drawImage() per frame (see MDN tip:
+  // "pre-render repeating objects on an offscreen canvas")
+  const oc = document.createElement('canvas');
+  oc.width = W; oc.height = H;
+  paintThumb(oc, colors, label, null);
+
+  if (imageUrl) {
+    const image = new Image();
+    image.crossOrigin = 'anonymous';
+    image.onload = () => paintThumb(oc, colors, label, image);
+    image.src = imageUrl;
+  }
+
   return oc;
 }
 
@@ -77,11 +105,12 @@ const frozenByGroup = { color: null, bw: null };
 
 function rand(min, max) { return min + Math.random() * (max - min); }
 
-function makeGroup(group, palette, prefix) {
+function makeGroup(group, palette) {
   for (let i = 0; i < palette.length; i++) {
+    const card = palette[i];
     items.push({
       group,
-      img: offscreenThumb(palette[i], prefix + (i + 1)),
+      img: offscreenThumb(card.colors, card.title, card.image),
       x: rand(W, innerWidth - W),
       y: rand(H, innerHeight - H),
       vx: rand(-60, 60) || 40,
@@ -100,8 +129,8 @@ function makeItems() {
   items.length = 0;
   frozenByGroup.color = null;
   frozenByGroup.bw = null;
-  makeGroup('color', colorPalette, 'C');
-  makeGroup('bw', bwPalette, 'BW');
+  makeGroup('color', colorPalette);
+  makeGroup('bw', bwPalette);
 }
 makeItems();
 
