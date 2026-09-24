@@ -1,3 +1,16 @@
+@font-face {
+  font-family:'Goudy Bookletter';
+  font-style:normal;
+font-weight:400;
+font-dislay:swap;
+src: url('../fonts/GoudyBookletter1911.ttf') format('truetype');
+}
+
+body {
+font-family: 'Goudy Bookletter 1911',serif;
+}
+
+
 html, body {
   margin: 0;
   padding: 0;

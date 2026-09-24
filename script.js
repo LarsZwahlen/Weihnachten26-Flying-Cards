@@ -66,29 +66,32 @@ function offscreenThumb(colors, label) {
   // loop only ever does a cheap drawImage() per frame (see MDN tip:
   // "pre-render repeating objects on an offscreen canvas")
   const oc = document.createElement('canvas');
-  oc.width = W; oc.height = H;
+  oc.width = W * dpr;
+  oc.height = H * dpr;
   const octx = oc.getContext('2d');
+  octx.scale(dpr, dpr);
+  
   const grad = octx.createLinearGradient(0, 0, W, H);
   grad.addColorStop(0, colors[0]);
   grad.addColorStop(1, colors[1]);
   octx.fillStyle = grad;
   roundRect(octx, 0, 0, W, H, 10);
   octx.fill();
+
   octx.strokeStyle = 'rgba(255,255,255,0.35)';
   octx.lineWidth = 2;
   roundRect(octx, 1, 1, W - 2, H - 2, 9);
   octx.stroke();
+
   drawLabel(octx, label);
   return oc;
 }
 
 function drawLabel(octx, label) {
-  octx.fillStyle = 'rgba(255,255,255,0.95)';
-  octx.font = '600 11px system-ui, sans-serif';
+  octx.fillStyle = 'rgb(255, 255, 255)';
+  octx.font = '400 13px "Goudy Bookletter 1911", serif';
   octx.textAlign = 'center';
   octx.textBaseline = 'middle';
-  octx.shadowColor = 'rgba(0,0,0,0.45)';
-  octx.shadowBlur = 3;
   const words = label.split(' ');
   const lines = [];
   let line = '';
@@ -111,9 +114,10 @@ function drawLabel(octx, label) {
 
 function offscreenImageThumb(image) {
   const oc = document.createElement('canvas');
-  oc.width = W;
-  oc.height = H;
+  oc.width = W * dpr;
+  oc.height = H * dpr;
   const octx = oc.getContext('2d');
+  octx.scale(dpr, dpr);
   const scale = Math.max(W / image.width, H / image.height);
   const width = image.width * scale;
   const height = image.height * scale;
