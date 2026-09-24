@@ -5,6 +5,12 @@ const ctx = canvas.getContext('2d', { alpha: false });
 
 const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
+//--only show cards, if the font fully loaded loaded --
+document.fonts.ready.then(() => {
+  makeItems();
+  requestAnimationFrame(step);
+});
+
 function resize() {
   canvas.width = Math.floor(innerWidth * dpr);
   canvas.height = Math.floor(innerHeight * dpr);
@@ -89,7 +95,7 @@ function offscreenThumb(colors, label) {
 
 function drawLabel(octx, label) {
   octx.fillStyle = 'rgb(255, 255, 255)';
-  octx.font = '400 13px "Goudy Bookletter 1911", serif';
+  octx.font = '400 13px "Quintessential", serif';
   octx.textAlign = 'center';
   octx.textBaseline = 'middle';
   const words = label.split(' ');
