@@ -18,7 +18,7 @@ window.addEventListener('resize', resize);
 // ---------- thumbnail definitions ----------
 const colorPalette = [
   ['#ff6b6b', '#c92a2a'],
-  ['#4dabf7', '#1864ab'],
+  ['#5f7a1d', '#064c08'],
   ['#69db7c', '#2b8a3e'],
   ['#ffd43b', '#e67700'],
   ['#da77f2', '#862e9c'],
@@ -49,7 +49,7 @@ const bwPalette = [
   ['#d0d3d6', '#212529'],
 ];
 
-const W = 100, H = 100; // thumbnail size
+const W = 150, H = 150; // thumbnail size
 
 function roundRect(c, x, y, w, h, r) {
   c.beginPath();
