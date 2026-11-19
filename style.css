@@ -1,35 +1,825 @@
+
+/* ==========================================================================
+   1. DESIGN TOKENS & CSS CUSTOM PROPERTIES
+   ========================================================================== */
+
+/*Fonts */ 
 @font-face {
-  font-family:'Quintessential';
-  font-style:normal;
-font-weight:400;
-font-display:swap;
-src: url('../fonts/Quintessential-Regular.ttf') format('truetype');
+  font-family: 'Intro';
+  src: url('assets/fonts/intro-light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Intro';
+  src: url('assets/fonts/intro-bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* Color Palette */
+  --color-accent-beige: #E1D4C2;
+  --color-card-border: #D9CDBA;
+  --color-dark-neutral: #404040;
+  --color-dark-neutral-hover: #797979;
+  --color-bg-top: #FCF7EE;
+  --color-bg-bottom: #F3E6D5;
+  --color-card-covered: #E6E6E6;
+  --color-white: #FFFFFF;
+
+  /* DIESE ZEILE HAT GEFEHLT: */
+  --font-sans: 'Intro', system-ui, -apple-system, sans-serif;
+
+  /* Desktop Font Sizes (> 768px) */
+  --fs-header-desktop: 36px;
+  --fs-songlist-desktop: 27px;
+  --fs-footer-desktop: 16px;
+  --fs-overlay-title-desktop: 13px;
+  --fs-overlay-design-desktop: 11px;
+
+  /* Mobile Font Sizes (<= 768px) */
+  --fs-header-mobile: 20px;
+  --fs-card-title-mobile: 14px;
+  --fs-card-artist-mobile: 12px;
+  --fs-card-design-mobile: 10px;
+  --fs-footer-mobile: 10px;
+
+  /* Layout & Spacing */
+  --grid-gap-desktop: 14px;
+  --grid-gap-mobile: 14px;
+  --card-radius: 12px;
+  --card-shadow: 0 4px 10px rgba(64, 64, 64, 0.12);
+  --transition-fast: 200ms ease;
+  --transition-flip: 600ms cubic-bezier(0.4, 0.2, 0.2, 1);
+}
+
+/* ==========================================================================
+   2. MODERN CSS RESET & BASE DOCUMENT STYLES
+   ========================================================================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  min-height: 100%;
 }
 
 body {
-font-family:'Quintessential',serif;
+  font-family: var(--font-sans);
+  color: var(--color-dark-neutral);
+  background: linear-gradient(180deg, var(--color-bg-top) 0%, var(--color-bg-bottom) 100%);
+  background-attachment: fixed;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow-x: hidden;
+  position: relative;
+  -webkit-font-smoothing: antialiased;
 }
 
-
-html, body {
-  margin: 0;
+/* Screen-reader only utility class */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
   padding: 0;
+  margin: -1px;
   overflow: hidden;
-  background: #0e0e12;
-  height: 100%;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
-canvas {
-  display: block;
+
+/* ==========================================================================
+   4. HEADER & SBW NM LOGO
+   ========================================================================== */
+.site-header {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 44px 32px 24px;
+}
+
+/* Clean slot reserved for future manual insertion of top fairy lights */
+.header__lights-slot {
+  width: 100%;
+  min-height: 0;
+}
+
+.site-header__inner {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.site-header__title {
+  font-size: var(--fs-header-desktop);
+  font-weight: 700;
+  color: var(--color-dark-neutral);
+  text-align: center;
+  line-height: 1.28;
+  max-width: 920px;
+  margin: 0 auto;
+}
+
+/* Top-Right SBW Neue Medien Logo */
+.site-header__logo-wrapper {
+  position: absolute;
+  right: 20px;
+  top: 2px;
+}
+
+.site-logo {
+  height: 44px;
+  width: auto;
+}
+
+
+/* ==========================================================================
+   5. MAIN WORKSPACE & TWO-COLUMN DESKTOP LAYOUT
+   ========================================================================== */
+.app-main {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  width: 100%;
+  max-width: 1220px;
+  margin: 18px auto 32px;
+  padding: 0 32px;
+}
+
+.workspace {
+  display: grid;
+  grid-template-columns: 230px 1fr;
+  gap: 28px;
+  align-items: start;
+}
+
+/* ==========================================================================
+6. LEFT COLUMN: SONG LIST (Desktop Only)
+   ========================================================================== */
+.song-sidebar {
+  width: 230px;
+  padding-top: 2px;
+}
+
+.song-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.song-list__item {
+  position: relative;
+  font-size: var(--fs-songlist-desktop);
+  font-size: clamp(16px, 1.35vw, var(--fs-songlist-desktop));
+  font-weight: 300;
+  color: var(--color-dark-neutral);
+  line-height: 1.32;
+  padding: 3px 10px;
+  border-radius: 7px;
   cursor: pointer;
+  transition: background-color var(--transition-fast), color var(--transition-fast), opacity var(--transition-fast);
+  user-select: none;
 }
 
-#hint {
-  position: fixed;
-  top: 12px;
-  left: 16px;
-  color: rgba(255, 255, 255, 0.55);
-  font: 13px "system-ui", sans-serif;
+/* HIER WIEDER ERGÄNZT: */
+.song-list__item:hover:not(.is-matched) {
+  background-color: rgba(225, 212, 194, 0.55);
+}
+
+.song-list__item:focus-visible {
+  outline: 2px solid var(--color-dark-neutral);
+  outline-offset: 2px;
+}
+
+/* Aktiver / ausgewählter Song */
+.song-list__item.is-selected {
+  background-color: var(--color-accent-beige);
+  font-weight: 700;
+}
+
+/* Bereits gelöster Song (ausgegraut, aber Hover-Tooltip bleibt aktiv) */
+.song-list__item.is-matched {
+  color: rgba(64, 64, 64, 0.38);
+  cursor: default;
+  background-color: transparent;
+  font-weight: 300;
+}
+
+/* ==========================================================================
+   7. CARD GRID & 3D CARD COMPONENT (Desktop & Mobile)
+   ========================================================================== */
+.board-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.card-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(135px, 1fr));
+  gap: var(--grid-gap-desktop);
+}
+
+/* Individual Card Wrapper with 3D Perspective */
+.card {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  perspective: 1000px;
+  cursor: pointer;
+  user-select: none;
+  border: none;
+  background: transparent;
+  padding: 0;
+  text-align: left;
+}
+
+
+/* Subtle organic rotation on desktop grid matching the screendesign */
+@media (min-width: 769px) {
+  .card:nth-child(4n + 1) .card__inner {
+    transform: rotate(-1.2deg);
+  }
+
+  .card:nth-child(4n + 2) .card__inner {
+    transform: rotate(1.1deg);
+  }
+
+  .card:nth-child(4n + 3) .card__inner {
+    transform: rotate(-0.8deg);
+  }
+
+  .card:nth-child(4n + 4) .card__inner {
+    transform: rotate(1.4deg);
+  }
+
+  /* Flip state preserves organic tilt on desktop */
+  .card.is-revealed .card__inner,
+  .card.is-flipped .card__inner {
+    transform: rotateY(180deg);
+  }
+}
+
+button,
+.card {
+  font-family: inherit;
+}
+
+.card:focus-visible {
+  outline: 2px solid var(--color-dark-neutral);
+  outline-offset: 4px;
+  border-radius: var(--card-radius);
+}
+
+/* 3D Rotating Inner Container */
+.card__inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow);
+  transform-style: preserve-3d;
+  transition: transform var(--transition-flip), box-shadow var(--transition-fast);
+}
+
+.card:hover .card__inner {
+  box-shadow: 0 6px 14px rgba(64, 64, 64, 0.18);
+}
+
+/* Shared Face Styling */
+.card__face {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--card-radius);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  overflow: hidden;
+/* Fix for suttle boarder outline while hovering over card-face */
+  background-clip: padding-box;
+  -webkit-background-clip: padding-box;
+  outline: 1px solid transparent;
+}
+
+/* --------------------------------------------------------------------------
+   DESKTOP vs MOBILE FACE ORIENTATION:
+   - Desktop (> 768px):
+     * Front face (0deg): Covered grey placeholder tile
+     * Back face (180deg): Artwork image + Hover attribution overlay
+   - Mobile (<= 768px):
+     * Front face (0deg): Artwork image (face-up by default)
+     * Back face (180deg): Beige attribution card (#E1D4C2) with Song, Artist, Designer
+   -------------------------------------------------------------------------- */
+
+/* Covered Tile Face (Used on Desktop before a card is matched) */
+.card__face--covered {
+  background: var(--color-bg-bottom);
+  border: 2px solid var(--color-card-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Artwork Face */
+.card__face--artwork {
+  background-color: var(--color-card-covered);
+  border: 2px solid var(--color-accent-beige);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Fallback state when local image file (images/sujet-X.jpg) is not yet uploaded */
+.card__image-fallback {
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-card-covered);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  text-align: center;
+}
+
+/* Desktop Hover Inspection Overlay on permanently revealed cards */
+.card__desktop-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: var(--color-accent-beige);
+  color: var(--color-dark-neutral);
+  padding: 12px 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
   pointer-events: none;
-  letter-spacing: 0.02em;
+}
+
+.card.is-revealed:hover .card__desktop-overlay,
+.card.is-revealed:focus-visible .card__desktop-overlay {
+  opacity: 1;
+}
+
+.card__overlay-top {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.card__overlay-title {
+  font-size: var(--fs-overlay-title-desktop);
+  font-weight: 700;
+  line-height: 1.25;
+  word-break: break-word;
+}
+
+.card__overlay-artist {
+  font-size: var(--fs-overlay-title-desktop);
+  font-weight: 400;
+  line-height: 1.25;
+}
+
+.card__overlay-designer {
+  font-size: var(--fs-overlay-design-desktop);
+  font-weight: 400;
+  line-height: 1.2;
+  opacity: 0.9;
+}
+
+/* Mobile Back Face (3D Flip Details View) */
+.card__face--mobile-back {
+  background: var(--color-bg-bottom);
+  color: var(--color-dark-neutral);
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  text-align: center;
+  transform: rotateY(180deg);
+  border: 2px solid;
+  border-color: var(--color-card-border);
+}
+
+.card__mobile-meta {
+  margin-top: auto;
+  margin-bottom: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+}
+
+.card__mobile-title {
+  font-size: var(--fs-card-title-mobile);
+  font-weight: 700;
+  line-height: 1.28;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.card__mobile-artist {
+  font-size: var(--fs-card-artist-mobile);
+  font-weight: 400;
+  line-height: 1.25;
+}
+
+.card__mobile-designer {
+  font-size: var(--fs-card-design-mobile);
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+/* Desktop Face Positioning (> 768px) */
+@media (min-width: 769px) {
+  .card__face--covered {
+    transform: rotateY(0deg);
+  }
+
+  .card__face--artwork {
+    transform: rotateY(180deg);
+  }
+
+  .card__face--mobile-back {
+    display: none;
+  }
+}
+
+/* Mobile Face Positioning (<= 768px) */
+@media (max-width: 768px) {
+  .card__face--covered {
+    display: none;
+  }
+
+  .card__face--artwork {
+    transform: rotateY(0deg);
+    border: none;
+  }
+
+  .card__desktop-overlay {
+    display: none;
+  }
+
+  .card.is-flipped .card__inner {
+    transform: rotateY(180deg);
+  }
+}
+
+/* ==========================================================================
+   8. INCORRECT MATCH SHAKE ANIMATION (Desktop Gameplay Feedback)
+   ========================================================================== */
+@keyframes cardMismatchShake {
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  20% {
+    transform: translateX(-7px) rotate(-2deg);
+  }
+
+  40% {
+    transform: translateX(7px) rotate(2deg);
+  }
+
+  60% {
+    transform: translateX(-5px) rotate(-1deg);
+  }
+
+  80% {
+    transform: translateX(5px) rotate(1deg);
+  }
+}
+
+.card.is-mismatch {
+  animation: cardMismatchShake 480ms cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+/* Subtle highlight pulse when user clicks a card before selecting a song */
+@keyframes sidebarAttentionPulse {
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-4px);
+  }
+
+  75% {
+    transform: translateX(4px);
+  }
+}
+
+.song-sidebar.is-nudged {
+  animation: sidebarAttentionPulse 360ms ease-in-out;
+}
+
+.game-note {
+  text-align: center;
+  width: 100%;
+  margin-top: 20px;
+}
+
+/* ==========================================================================
+   9. DESKTOP RESET BUTTON ("zurücksetzen")
+   ========================================================================== */
+.board-actions {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.reset-button {
+  appearance: none;
+  background-color: transparent;
+  border: 1px solid;
+  color: var(--color-dark-neutral);
+  border-color: var(--color-dark-neutral);
+  font-family: var(--font-sans);
+  font-size: var(--fs-songlist-desktop-btn);
+  font-weight: 700;
+  padding: 10px 15px;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: border-color var(--color-dark-neutral), transform var(--transition-fast);
+}
+
+.reset-button:hover {
+  border-color: var(--color-dark-neutral-hover);
+  color: var(--color-dark-neutral-hover);
+}
+
+.reset-button:active {
+  transform: scale(0.97);
+}
+
+.reset-button:focus-visible {
+  outline: 2px solid var(--color-dark-neutral);
+  outline-offset: 2px;
+}
+
+
+
+/* ==========================================================================
+   10. FOOTER WITH SNOW HILLS
+   ========================================================================== */
+.site-footer {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  padding: 75px 24px 20px;
+  text-align: center;
+  overflow: hidden;
+}
+
+/* Left & Right Curved White Snow Hills matching the screendesigns */
+.site-footer::before,
+.site-footer::after {
+  content: '';
+  position: absolute;
+  bottom: -60px;
+  height: 200px;
+  background-color: var(--color-white);
+  border-radius: 50%;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.site-footer::before {
+  left: -8%;
+  width: 66%;
+}
+
+.site-footer::after {
+  right: -8%;
+  width: 66%;
+}
+
+.site-footer__note {
+  font-size: var(--fs-footer-desktop);
+  font-weight: 400;
+  color: var(--color-dark-neutral);
+  line-height: 1.38;
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+/* ==========================================================================
+   11. TABLET ADJUSTMENTS (769px – 1024px)
+   ========================================================================== */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .site-header {
+    padding: 32px 24px 20px;
+  }
+
+  .site-header__title {
+    font-size: 28px;
+    padding: 0 130px; /* Verhindert Überlappung mit dem SBW-Logo */
+  }
+
+  .app-main {
+    padding: 0 24px;
+  }
+
+  .workspace {
+    grid-template-columns: 190px 1fr; /* Etwas schmalere Songliste */
+    gap: 18px;
+  }
+
+  .song-sidebar {
+    width: 190px;
+  }
+
+  .card-grid {
+    gap: 10px; /* Etwas mehr Platz für die Karten selbst */
+  }
+}
+
+/* ==========================================================================
+   12. MOBILE RESPONSIVE BREAKPOINT (<= 768px)
+   ========================================================================== */
+@media (max-width: 768px) {
+
+  .background-decorations {
+    display: none;
+  }
+
+  .site-header {
+    padding: 20px 20px 14px;
+  }
+
+  .site-header__inner {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .site-header__logo-wrapper {
+    position: static;
+    align-self: flex-end;
+    margin-bottom: 14px;
+  }
+
+  .site-header__title {
+    font-size: var(--fs-header-mobile);
+    line-height: 1.3;
+    max-width: 340px;
+  }
+
+  .app-main {
+    margin: 10px auto 24px;
+    padding: 0 20px;
+  }
+
+  .workspace {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .song-sidebar,
+  .board-actions, 
+  .game-note {
+    display: none;
+  }
+
+  .card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--grid-gap-mobile);
+    max-width: 440px;
+    margin: 0 auto;
+  }
+  
+
+
+  .site-footer {
+    padding: 85px 16px 24px;
+  }
+
+  .site-footer::before,
+  .site-footer::after {
+    width: 72%;
+    height: 150px;
+    bottom: -55px;
+  }
+
+  .site-footer__note {
+    font-size: var(--fs-footer-mobile);
+    max-width: 330px;
+    line-height: 1.45;
+    padding-top: 0;
+  }
+} 
+
+
+
+/* ==========================================================================
+   13. SONG LIST CUSTOM HOVER TOOLTIP (AUSSERHALB VON @MEDIA!)
+   ========================================================================== */
+
+.song-list__text {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.song-tooltip {
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  transform: translateY(-50%) translateX(5px);
+  background-color: var(--color-accent-beige);
+  color: var(--color-dark-neutral);
+  padding: 12px 14px;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(64, 64, 64, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: max-content;
+  max-width: 260px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity var(--transition-fast), transform var(--transition-fast), visibility var(--transition-fast);
+  z-index: 50;
+}
+
+.song-list__item:hover .song-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(-50%) translateX(15px);
+}
+
+.song-tooltip__title {
+  font-size: var(--fs-overlay-title-desktop);
+  font-weight: 700;
+  line-height: 1.25;
+  white-space: normal;
+}
+
+.song-tooltip__artist {
+  font-size: var(--fs-overlay-title-desktop);
+  font-weight: 300;
+  line-height: 1.25;
+}
+
+
+/* ==========================================================================
+   14. FALLING SNOWFLAKES BACKGROUND
+   ========================================================================== */
+.background-decorations {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.falling-snowflake {
+  position: absolute;
+  top: -50px;
+  height: auto;
+  animation: snowfall linear infinite;
+}
+
+@keyframes snowfall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+  100% {
+    transform: translateY(110vh) rotate(360deg);
+  }
 }

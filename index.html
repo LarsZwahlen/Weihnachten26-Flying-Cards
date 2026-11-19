@@ -1,14 +1,103 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="./style.css">
-    <script type="module" src="./script.js"></script>    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weihnachtskarten</title>
-  </head>
-  <body>
-<div id="hint">Farbig &amp; S/W: pro Gruppe kann jeweils nur eine Karte eingefroren sein. Klick auf eine andere Karte löst die alte, klick auf die eingefrorene gibt sie frei.</div>
-<canvas id="c"></canvas>
+<html lang="de">
 
-  </body>
+
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Weihnachtskarten 2026</title>
+
+  <link rel="stylesheet" href="style.css" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+</head>
+
+<body>
+
+
+  <!-- Container für die fallenden Schneeflocken -->
+  <div class="background-decorations" id="snowContainer" aria-hidden="true"></div>
+
+  <!-- =====================================================================
+       SITE HEADER
+       Note: Top fairy lights (Lichterkette) intentionally omitted per spec.
+       A clean placeholder hook (.header__lights-slot) is provided at the top
+       of the header for manual addition later.
+       ===================================================================== -->
+  <header class="site-header">
+    <!-- Reserved slot for future manual insertion of top fairy lights -->
+    <div class="header__lights-slot" aria-hidden="true"></div>
+
+    <div class="site-header__inner">
+      <!-- Brand Logo (SBW Neue Medien) -->
+      <div class="site-header__logo-wrapper">
+        <img src="assets/img/sbw+neue-medien.svg" alt="Logo SBW Neue Medien" class="site-logo" />
+      </div>
+
+      <!-- Main Festive Headline -->
+      <h1 class="site-header__title">
+        Die SBW Neue Medien wünscht euch frohe Weihnachten
+        und ein glückliches neues Jahr
+      </h1>
+    </div>
+  </header>
+
+  <!-- =====================================================================
+       MAIN APPLICATION WORKSPACE
+       - Desktop (> 768px): Two-column layout (Song List left + 6x4 Grid right)
+       - Mobile (<= 768px): Single-column container with 2-column flip-card grid
+       ===================================================================== -->
+  <main class="app-main" id="appMain">
+    <div class="workspace">
+      <!-- Left Column: Interactive Song List (Visible on Desktop > 768px) -->
+      <aside class="song-sidebar" aria-label="Weihnachtssongs Auswahl">
+        <ul class="song-list" id="songList" role="listbox" aria-label="Verfügbare Weihnachtssongs">
+          <!-- Dynamically populated by script.js -->
+        </ul>
+      </aside>
+
+      <!-- Center/Right Column: Card Grid & Reset Controls -->
+      <section class="board-section" aria-label="Weihnachtskarten Spielfeld">
+        <!-- Live status region for screen readers -->
+        <div id="gameStatus" class="sr-only" aria-live="polite"></div>
+
+        <!-- 24-Card Grid Container -->
+        <div class="card-grid" id="cardGrid">
+          <!-- Dynamically populated by script.js -->
+        </div>
+
+        <!-- Desktop Reset Action Button -->
+      </section>
+    </div>
+
+
+    <div class="game-note">
+      <p>Ordne die Weihnachtssongs ihren Sujets zu.</p>
+    </div>
+
+    <div class="board-actions">
+      <button type="button" id="resetButton" class="reset-button" aria-label="Spielstand zurücksetzen">
+        zurücksetzen
+      </button>
+    </div>
+
+  </main>
+
+  <!-- =====================================================================
+       SITE FOOTER WITH CURVED SNOW HILLS
+       ===================================================================== -->
+  <footer class="site-footer">
+    <p class="site-footer__note">
+      Die Weihnachtssujets wurden vom Lehrgang 26 im Rahmen des Moduls 271
+      «Vektordaten erstellen und Bilder bearbeiten» gestaltet.
+    </p>
+  </footer>
+
+  <!-- Main Application Script -->
+  <script src="script.js"></script>
+</body>
+
 </html>
