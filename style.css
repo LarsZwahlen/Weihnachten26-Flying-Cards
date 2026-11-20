@@ -43,9 +43,9 @@
 
   /* Mobile Font Sizes (<= 768px) */
   --fs-header-mobile: 20px;
-  --fs-card-title-mobile: 14px;
-  --fs-card-artist-mobile: 12px;
-  --fs-card-design-mobile: 10px;
+  --fs-card-title-mobile: 16px;
+  --fs-card-artist-mobile: 14px;
+  --fs-card-design-mobile: 12px;
   --fs-footer-mobile: 12px;
 
   /* Layout & Spacing */
@@ -250,6 +250,7 @@ body {
   background: transparent;
   padding: 0;
   text-align: left;
+  -webkit-tap-highlight-color: transparent; /*macht die Farbe beim Auslösen Durchsichtig*/
 }
 
 
